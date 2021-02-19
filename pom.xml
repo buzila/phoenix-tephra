@@ -28,7 +28,7 @@
 
   <groupId>org.apache.tephra</groupId>
   <artifactId>tephra</artifactId>
-  <version>0.16.0</version>
+  <version>0.16.0-DataProc</version>
   <packaging>pom</packaging>
   <name>Apache Tephra</name>
   <description>
@@ -152,15 +152,41 @@
   <modules>
     <module>tephra-api</module>
     <module>tephra-core</module>
-    <module>tephra-hbase-compat-1.1-base</module>
     <module>tephra-hbase-compat-1.3</module>
-    <module>tephra-hbase-compat-1.4-base</module>
-    <module>tephra-hbase-compat-2.0-base</module>
-    <module>tephra-hbase-compat-2.3</module>
-    <module>tephra-examples</module>
     <module>tephra-distribution</module>
-    <module>tephra-core-shaded</module>
   </modules>
+
+  <repositories>
+
+    <repository>
+      <id>maven central</id>
+      <url>https://repo1.maven.org/maven2/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>apache release</id>
+      <url>https://repository.apache.org/content/repositories/releases/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+    </repository>
+  </repositories>
 
   <scm>
     <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-tephra.git</connection>
@@ -207,11 +233,11 @@
     <guava.version>13.0.1</guava.version>
     <guice.version>3.0</guice.version>
     <logback.version>1.2.3</logback.version>
-    <hadoop.version>2.2.0</hadoop.version>
+    <hadoop.version>2.10.0</hadoop.version>
     <hbase11.version>1.1.1</hbase11.version>
     <hbase12cdh.version>1.2.0-cdh5.7.0</hbase12cdh.version>
     <hbase12.version>1.2.0</hbase12.version>
-    <hbase13.version>1.3.1</hbase13.version>
+    <hbase13.version>1.3.5</hbase13.version>
     <hbase14.version>1.4.0</hbase14.version>
     <hbase15.version>1.5.0</hbase15.version>
     <hbase16.version>1.6.0</hbase16.version>
@@ -225,7 +251,7 @@
 
     <!-- twill -->
 
-    <twill.version>0.8.0</twill.version>
+    <twill.version>0.14.0-DataProc</twill.version>
 
     <!-- end twill -->
 
@@ -570,6 +596,42 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>longBuild</id>
+      <modules>
+        <module>tephra-api</module>
+        <module>tephra-core</module>
+        <module>tephra-hbase-compat-1.1-base</module>
+        <module>tephra-hbase-compat-1.3</module>
+        <module>tephra-hbase-compat-1.4-base</module>
+        <module>tephra-hbase-compat-2.0-base</module>
+        <module>tephra-hbase-compat-2.3</module>
+        <module>tephra-examples</module>
+        <module>tephra-distribution</module>
+        <module>tephra-core-shaded</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>java8-doclint-disabled</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <modules>
+        <module>tephra-api</module>
+        <module>tephra-core</module>
+        <module>tephra-hbase-compat-1.3</module>
+        <!--module>tephra-examples</module-->
+        <module>tephra-distribution</module>
+        <!--module>tephra-core-shaded</module-->
+      </modules>
+      <properties>
+        <javadoc.opts>-Xdoclint:none</javadoc.opts>
+        <maven.source.skip>true</maven.source.skip>
+        <source.skip>true</source.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.tests.skip>true</maven.tests.skip>
+      </properties>
+    </profile>
     <!-- Profile for generating coverage report -->
     <profile>
       <id>coverage</id>
